@@ -1,0 +1,6 @@
+player(id, role, pseudo, #id_game)
+game(id, score, code, status, current_player)
+turn(id, hint, score, status, hint_count, discovered_cards, #id_game)
+card(id, position, status, #id_game, #id_color, #id_word)
+word(id, text)
+color(id, name)

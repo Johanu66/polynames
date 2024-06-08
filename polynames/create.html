@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charSet="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, shrink-to-fit=no, viewport-fit=cover" />
+    <link href="img/apple-touch-icon.png" rel="icon">
+    <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+    <title>Polyname - New Game</title>
+    <link rel="stylesheet" href="css/tailwind.css" />
+    <link rel="stylesheet" href="css/create.css">
+</head>
+
+<body>
+    <div id="create-container">
+        <section class="flex flex-col items-center justify-center">
+            <h1 class="text-2xl font-bold">Welcome to Codenames</h1>
+            <form id="create-player-form" action="" method="post" class="mb-3">
+                <label for="pseudo">To enter the game, choose a nickname.</label>
+                <input type="text" id="pseudo" name="pseudo" placeholder="Enter your nickname"
+                    class="p-2 m-2 rounded-lg" required>
+                <button
+                    class="text-white rounded-lg create-button group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Create
+                    Game</button>
+            </form>
+            <a href="join.html" class="underline">Join an existing game</a>
+        </section>
+    </div>
+
+    <script type="module">
+        import { PlayerView } from "./views/player-view.js";
+
+        window.addEventListener("load", () => {
+            PlayerView.attachEvents();
+        });
+    </script>
+</body>
+
+</html>
