@@ -1,13 +1,13 @@
 export class PlayerService {
   constructor() {  }
 
-  static async create(pseudo) {
+  static async create(player) {
     const response = await fetch('http://localhost:8080/players', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({pseudo: pseudo}),
+      body: JSON.stringify(player),
     });
     if(response.status === 200)
       {

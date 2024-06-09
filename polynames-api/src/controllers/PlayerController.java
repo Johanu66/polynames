@@ -31,20 +31,35 @@ public class PlayerController {
         try {
             Player player = context.getRequest().extractBody(Player.class);
 
+            System.out.println("Check point 1");
+
             if(player.pseudo() == null) {
                 context.getResponse().badRequest("Missing parameters : pseudo");
                 return;
             }
 
+            System.out.println("Check point 2");
+
             if(player.game_code() ==  null){
                 GameDAO gameDAO = new GameDAO();
                 Game game = gameDAO.newGame();
                 player = player.withIdGame(game.id());
+            }else{
+                GameDAO gameDAO = new GameDAO();
+                Game game = gameDAO.findByCode(player.game_code());
+                if(game == null){
+                    context.getResponse().badRequest("Game not found");
+                    return;
+                }
+                player = player.withIdGame(game.id());
             }
+
+            System.out.println("Check point 3");
 
             player = playerDAO.insert(player);
             context.getResponse().json(player);
         } catch (Exception e) {
+            System.out.println(e);
             context.getResponse().serverError("Error creating player");
         }
     }

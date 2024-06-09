@@ -16,12 +16,11 @@
         <section class="flex flex-col items-center justify-center">
             <h1 class="text-2xl font-bold">Welcome to Codenames</h1>
             <form id="create-player-form" action="" method="post" class="mb-3">
-                <label for="pseudo">To enter the game, choose a nickname.</label>
-                <input type="text" id="pseudo" name="pseudo" placeholder="Enter your nickname"
-                    class="p-2 m-2 rounded-lg" required>
-                <button
-                    class="text-white rounded-lg create-button group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Create
-                    Game</button>
+                <div>
+                    <label for="pseudo">To enter the game, choose a nickname.</label>
+                    <input type="text" id="pseudo" name="pseudo" placeholder="Enter your nickname" class="p-2 m-2 rounded-lg" required>
+                </div>
+                <button class="text-white rounded-lg create-button group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Create Game</button>
             </form>
             <a href="join.html" class="underline">Join an existing game</a>
         </section>
@@ -31,7 +30,7 @@
         import { PlayerView } from "./views/player-view.js";
 
         window.addEventListener("load", () => {
-            PlayerView.attachEvents();
+            PlayerView.attachCreatePlayerEvents();
         });
     </script>
 </body>

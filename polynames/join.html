@@ -15,14 +15,28 @@
     <div id="join-container">
         <section class="flex flex-col items-center justify-center">
             <h1 class="text-2xl font-bold">Welcome to Codenames</h1>
-            <form action="" method="post" class="mb-3">
-                <label for="code">Enter the game code giving  by your friend.</label>
-                <input type="text" id="code" name="code" placeholder="Enter the game code" class="p-2 m-2 rounded-lg" required>
-                <button type="" class="text-white rounded-lg create-button group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Join Game</button>
+            <form id="join-game-form" method="post" class="mb-3">
+                <div id="code_container">
+                    <label for="code">Enter the game code giving by your friend.</label>
+                    <input type="text" id="code" name="code" placeholder="Enter the game code" class="p-2 m-2 rounded-lg" required>
+                </div>
+                <div id="pseudo_container" class="hidden">
+                    <label for="pseudo">To enter the game, choose a nickname.</label>
+                    <input type="text" id="pseudo" name="pseudo" placeholder="Enter your nickname" class="p-2 m-2 rounded-lg">
+                </div>
+                <button class="text-white rounded-lg create-button group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Join Game</button>
             </form>
             <a href="create.html" class="underline">Create a new game</a>
         </section>
     </div>
+
+    <script type="module">
+        import { PlayerView } from "./views/player-view.js";
+
+        window.addEventListener("load", () => {
+            PlayerView.attachJoinGameEvents();
+        });
+    </script>
 </body>
 
 </html>
