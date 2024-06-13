@@ -46,7 +46,7 @@ public class App {
 
         webServer.getRouter().get(
             "/games/:gameCode",
-            (WebServerContext context) -> { GameController.findByCode(context); }
+            (WebServerContext context) -> { GameController.findHierarchicalGameByCode(context); }
         );
 
         webServer.getRouter().post(

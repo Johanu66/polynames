@@ -4,6 +4,10 @@ import java.sql.*;
 import java.util.*;
 import database.PolyBayDatabase;
 import models.Game;
+import models.HieraCard;
+import models.HieraGame;
+import models.HieraPlayer;
+import models.HieraTurn;
 
 public class GameDAO {
     private PolyBayDatabase database;
@@ -72,6 +76,59 @@ public class GameDAO {
         }
         return null;
     }
+
+
+    public HieraGame findHierarchicalGameByCode(String code) throws SQLException {
+        HieraGame game = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+    
+        try {
+            
+            // Step 1: Fetch game details
+            stmt = this.database.prepareStatement(
+                    "SELECT g.id AS game_id, g.score AS game_score, g.code AS game_code, g.status AS game_status, " +
+                    "g.current_player AS game_current_player " +
+                    "FROM game g " +
+                    "WHERE g.code = ?"
+            );
+            stmt.setString(1, code);
+            rs = stmt.executeQuery();
+    
+            if (rs.next()) {
+                int gameId = rs.getInt("game_id");
+                int gameScore = rs.getInt("game_score");
+                String gameCode = rs.getString("game_code");
+                String gameStatus = rs.getString("game_status");
+                String gameCurrentPlayer = rs.getString("game_current_player");
+    
+                // Step 2: Initialize the Game object
+                TurnDAO turnDAO = new TurnDAO();
+                PlayerDAO playerDAO = new PlayerDAO();
+                CardDAO cardDAO = new CardDAO();
+                
+                ArrayList<HieraPlayer> players = playerDAO.findHieraPlayersByGameId(gameId);
+
+                HieraTurn  turn = turnDAO.findLastTurnByGameId(gameId);
+
+                ArrayList<HieraCard> cards = cardDAO.findHieraCardsByGameId(gameId);
+
+                game = new HieraGame(gameId, gameScore, gameCode, gameStatus, gameCurrentPlayer, players, turn, cards);
+            }
+    
+        } finally {
+            // Step 5: Close resources
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    
+        return game;
+    }
+    
 
     public Game insert(Game game) throws SQLException {
         PreparedStatement myPreparedStatement = this.database.prepareStatement("INSERT INTO game (score, code, status, current_player) VALUES (?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);

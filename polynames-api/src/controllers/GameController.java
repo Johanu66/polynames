@@ -2,6 +2,7 @@ package controllers;
 
 import dao.GameDAO;
 import models.Game;
+import models.HieraGame;
 import webserver.WebServerContext;
 
 public class GameController {
@@ -29,6 +30,20 @@ public class GameController {
         String gameCode = context.getRequest().getParam("gameCode");
         try {
             Game game = gameDAO.findByCode(gameCode);
+            if (game != null) {
+                context.getResponse().json(game);
+            } else {
+                context.getResponse().notFound("Game not found");
+            }
+        } catch (Exception e) {
+            context.getResponse().serverError("Error finding game");
+        }
+    }
+
+    static public void findHierarchicalGameByCode(WebServerContext context) {
+        String gameCode = context.getRequest().getParam("gameCode");
+        try {
+            HieraGame game = gameDAO.findHierarchicalGameByCode(gameCode);
             if (game != null) {
                 context.getResponse().json(game);
             } else {

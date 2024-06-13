@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import database.PolyBayDatabase;
 import models.Card;
+import models.HieraCard;
 
 public class CardDAO {
     private PolyBayDatabase database;
@@ -88,5 +89,71 @@ public class CardDAO {
         myPreparedStatement.setInt(1, id);
 
         myPreparedStatement.executeUpdate();
+    }
+
+    public HieraCard findHieraCardById(int cardId) throws SQLException {
+        PreparedStatement myPreparedStatement = this.database.prepareStatement("SELECT card.id, card.position, card.status, color.name, word.name FROM card INNER JOIN color ON card.id_color = color.id INNER JOIN word ON card.id_word = word.id WHERE card.id = ?;");
+        myPreparedStatement.setInt(1, cardId);
+        ResultSet results = myPreparedStatement.executeQuery();
+
+        if (results.next()) {
+            final int id = results.getInt("id");
+            final int position = results.getInt("position");
+            final String status = results.getString("status");
+            final String color = results.getString("color.name");
+            final String word = results.getString("word.name");
+
+            return new HieraCard(id, position, status, color, word);
+        }
+        return null;
+    }
+
+
+    public ArrayList<HieraCard> findHieraCardsByGameId(int gameId) throws SQLException {
+        try {
+            PreparedStatement myPreparedStatement = this.database.prepareStatement("SELECT card.id, card.position, card.status, color.name, word.text FROM card INNER JOIN color ON card.id_color = color.id INNER JOIN word ON card.id_word = word.id WHERE card.id_game = ?;");
+            myPreparedStatement.setInt(1, gameId);
+            ResultSet results = myPreparedStatement.executeQuery();
+            ArrayList<HieraCard> cards = new ArrayList<>();
+
+            while (results.next()) {
+                final int id = results.getInt("id");
+                final int position = results.getInt("position");
+                final String status = results.getString("status");
+                final String color = results.getString("color.name");
+                final String word = results.getString("word.text");
+    
+                HieraCard card = new HieraCard(id, position, status, color, word);
+                cards.add(card);
+            }
+            return cards;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public ArrayList<HieraCard> findHieraCardsByTurnId(int turnId) throws SQLException {
+        try {
+            PreparedStatement myPreparedStatement = this.database.prepareStatement("SELECT card.id, card.position, card.status, color.name, word.text FROM card INNER JOIN color ON card.id_color = color.id INNER JOIN word ON card.id_word = word.id INNER JOIN turnCard ON card.id = turnCard.id_card WHERE turnCard.id_turn = ?;");
+            myPreparedStatement.setInt(1, turnId);
+            ResultSet results = myPreparedStatement.executeQuery();
+            ArrayList<HieraCard> cards = new ArrayList<>();
+
+            while (results.next()) {
+                final int id = results.getInt("id");
+                final int position = results.getInt("position");
+                final String status = results.getString("status");
+                final String color = results.getString("color.name");
+                final String word = results.getString("word.text");
+
+                HieraCard card = new HieraCard(id, position, status, color, word);
+                cards.add(card);
+            }
+            return cards;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }

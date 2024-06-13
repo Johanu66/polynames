@@ -4,7 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import database.PolyBayDatabase;
+import models.HieraTurn;
 import models.Turn;
 
 public class TurnDAO {
@@ -93,4 +95,46 @@ public class TurnDAO {
 
         myPreparedStatement.executeUpdate();
     }
+
+    public HieraTurn findLastTurnByGameId(int gameId) throws SQLException {
+        HieraTurn lastTurn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+    
+        try {
+            stmt = this.database.prepareStatement(
+                    "SELECT id, hint, score, status, hint_count, discovered_cards " +
+                    "FROM turn " +
+                    "WHERE id_game = ? " +
+                    "ORDER BY id DESC " +  // Tri par id décroissant pour obtenir le dernier turn en premier
+                    "LIMIT 1"              // Limite à un seul résultat
+            );
+            stmt.setInt(1, gameId);
+            rs = stmt.executeQuery();
+    
+            if (rs.next()) {
+                int turnId = rs.getInt("id");
+                String hint = rs.getString("hint");
+                int score = rs.getInt("score");
+                String status = rs.getString("status");
+                int hintCount = rs.getInt("hint_count");
+                int discoveredCards = rs.getInt("discovered_cards");
+
+                CardDAO cardDAO = new CardDAO();
+
+                lastTurn = new HieraTurn(turnId, hint, score, status, hintCount, discoveredCards, cardDAO.findHieraCardsByTurnId(turnId));
+            }
+    
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    
+        return lastTurn;
+    }
+    
 }

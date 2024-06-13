@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import database.PolyBayDatabase;
+import models.HieraPlayer;
 import models.Player;
 
 public class PlayerDAO {
@@ -34,6 +35,28 @@ public class PlayerDAO {
                 GameDAO gameDAO = new GameDAO();
 
                 Player player = new Player(id, role, pseudo, idGame, gameDAO.getCode(idGame));
+                players.add(player);
+            }
+            return players;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public ArrayList<HieraPlayer> findHieraPlayersByGameId(int gameId) {
+        try {
+            PreparedStatement myPreparedStatement = this.database.prepareStatement("SELECT * FROM player WHERE id_game = ?;");
+            myPreparedStatement.setInt(1, gameId);
+            ResultSet results = myPreparedStatement.executeQuery();
+            ArrayList<HieraPlayer> players = new ArrayList<>();
+
+            while (results.next()) {
+                final int id = results.getInt("id");
+                final String role = results.getString("role");
+                final String pseudo = results.getString("pseudo");
+
+                HieraPlayer player = new HieraPlayer(id, role, pseudo);
                 players.add(player);
             }
             return players;
