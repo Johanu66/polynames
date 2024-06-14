@@ -20,7 +20,7 @@ export class PlayerView {
             // Save the player in the local storage
             localStorage.setItem("player", JSON.stringify(player));
             // Redirect to the game view
-            window.location.href = "game.html#"+player.game_code;
+            window.location.href = "../game.html?code="+player.game_code;
         }
     }
 
@@ -45,7 +45,7 @@ export class PlayerView {
                 // Save the player in the local storage
                 localStorage.setItem("player", JSON.stringify(player));
                 // Redirect to the game view
-                window.location.href = "game.html#"+player.game_code;
+                window.location.href = "../game.html?code="+player.game_code;
             }
         }else{
             alert("Game not found");

@@ -16,4 +16,14 @@ export class PlayerService {
       }
       return null;
   }
+
+  static async updatePlayer(player) {
+    const response = await fetch('http://localhost:8080/players/'+player.id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(player),
+    });
+  }
 }

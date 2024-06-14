@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+    <div>
+        <div id="loading">
+            <div class="spinner"></div>
+        </div>
+        <div id="game_container" class="hidden">
+            <div di="spymaster_container" class="flex flex-col items-center bg-red-500 text-white rounded-lg p-4 w-1/4">
+                <div class="text-3xl font-bold">9</div>
+                <div class="text-xl">Spymester : </div>
+                <div id="spymaster_pseudo" class="text-xl">----</div>
+                <button id="join_as_spymaster_button" class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Join as Spymaster</button>
+            </div>
+            <div>
+                <main id="cards" class="grid grid-cols-5 gap-4 w-2/4">
+                </main>
+            </div>
+            <div id="operative_container" class="flex flex-col items-center bg-blue-700 text-white rounded-lg p-4 w-1/4">
+                <div class="text-3xl font-bold">9</div>
+                <div class="text-xl">Operative : </div>
+                <div id="operative_pseudo" class="text-xl">----</div>
+                <button id="join_as_operative_button" class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Join as Operative</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="views/game-view.js"></script>
+</body>
+</html>
