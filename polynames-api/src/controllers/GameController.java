@@ -70,6 +70,8 @@ public class GameController {
             Game game = context.getRequest().extractBody(Game.class);
             gameDAO.update(new Game(gameId, game.score(), game.code(), game.status(), game.current_player()));
             context.getResponse().ok("Game updated successfully");
+
+            ApplicationController.diffuseGame(game.code(), context);
         } catch (Exception e) {
             context.getResponse().serverError("Error updating game");
         }

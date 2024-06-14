@@ -35,6 +35,12 @@ CREATE TABLE card (
     id_word INT NOT NULL
 );
 
+CREATE TABLE turnCard (
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    id_card INT NOT NULL,
+    id_turn INT NOT NULL
+);
+
 CREATE TABLE word (
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     `text` VARCHAR(50) UNIQUE NOT NULL
@@ -55,6 +61,10 @@ ALTER TABLE card
 ADD CONSTRAINT fk_card_game FOREIGN KEY (id_game) REFERENCES game(id),
 ADD CONSTRAINT fk_card_color FOREIGN KEY (id_color) REFERENCES color(id),
 ADD CONSTRAINT fk_card_word FOREIGN KEY (id_word) REFERENCES word(id);
+
+ALTER TABLE turnCard
+ADD CONSTRAINT fk_turnCard_card FOREIGN KEY (id_card) REFERENCES card(id),
+ADD CONSTRAINT fk_turnCard_turn FOREIGN KEY (id_turn) REFERENCES turn(id);
 
 
 INSERT INTO word (`text`) VALUES ('apple'), ('banana'), ('grape'), ('orange'),

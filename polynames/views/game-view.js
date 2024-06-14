@@ -57,27 +57,58 @@ function reflesh(game) {
         // Mise à jour des cartes sur le plateau
         const cardsContainer = document.getElementById('cards');
         cardsContainer.innerHTML = ''; // Clear existing cards
-        game.cards.forEach(card => {
-            const cardElement = document.createElement('div');
-            cardElement.className = 'bg-gray-200 rounded-lg p-4 text-center';
-            cardElement.textContent = card.word.toUpperCase();
 
-            // Add card color based on its status and color
-            if (card.status === 'revealed' || (card.status === 'hidden' && player.role === 'spymaster')) {
-                if (card.color === 'blue') {
-                    cardElement.classList.add('bg-blue-500');
-                } else if (card.color === 'red') {
-                    cardElement.classList.add('bg-red-500');
-                } else if (card.color === 'gray') {
-                    cardElement.classList.add('bg-gray-500');
-                } else if (card.color === 'black') {
-                    cardElement.classList.add('bg-black');
-                    cardElement.classList.add('text-white');
+        if(game.status == 'pending' || game.status == 'done'){
+            cardsContainer.classList.add("grid", "grid-cols-5", "gap-4", "w-2/4");
+            cardsContainer.classList.remove("flex", "justify-center");
+            game.cards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.className = 'bg-gray-200 rounded-lg p-4 text-center';
+                cardElement.textContent = card.word.toUpperCase();
+
+                // Add card color based on its status and color
+                if (card.status === 'revealed' || (card.status === 'hidden' && player.role === 'spymaster')) {
+                    if (card.color === 'blue') {
+                        cardElement.classList.add('bg-blue-500');
+                    } else if (card.color === 'red') {
+                        cardElement.classList.add('bg-red-500');
+                    } else if (card.color === 'gray') {
+                        cardElement.classList.add('bg-gray-500');
+                    } else if (card.color === 'black') {
+                        cardElement.classList.add('bg-black');
+                        cardElement.classList.add('text-white');
+                    }
                 }
-            }
 
-            cardsContainer.appendChild(cardElement);
-        });
+                cardsContainer.appendChild(cardElement);
+            });
+        }
+        else if(game.status == 'waiting'){
+            const startButton = document.createElement('button');
+            startButton.className = 'create-button group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8';
+            startButton.textContent = "Start Game";
+            cardsContainer.appendChild(startButton);
+            cardsContainer.classList.add("flex", "justify-center");
+            cardsContainer.classList.remove("grid", "grid-cols-5", "gap-4", "w-2/4");
+
+            startButton.addEventListener("click", async (event)=>{
+                event.preventDefault();
+                if(game.players.length < 2){
+                    alert("Il faut au moins 2 joueurs pour commencer la partie");
+                    return;
+                }else{
+                    // check if there is a spymaster and an operative
+                    const spymaster = game.players.find(player => player.role?.toLowerCase().includes('spymaster'));
+                    const operative = game.players.find(player => player.role?.toLowerCase().includes('operative'));
+                    if(!spymaster || !operative){
+                        alert("Il faut un spymaster et un operative pour commencer la partie");
+                        return;
+                    }
+                }
+                
+                await GameService.updateGame({id: game.id, score: 0, code: game.code, status: 'pending', current_player: game.current_player});
+            });
+        }
 
         document.getElementById("join_as_spymaster_button").addEventListener("click", async (event)=>{
             event.preventDefault();

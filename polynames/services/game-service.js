@@ -20,4 +20,14 @@ export class GameService {
           }
           return null;
     }
+
+    static async updateGame(game) {
+        const response = await fetch('http://localhost:8080/games/'+game.id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(game)
+        });
+    }
   }

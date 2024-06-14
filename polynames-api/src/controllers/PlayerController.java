@@ -3,7 +3,6 @@ package controllers;
 import dao.GameDAO;
 import dao.PlayerDAO;
 import models.Game;
-import models.HieraGame;
 import models.Player;
 import webserver.WebServerContext;
 
@@ -72,9 +71,7 @@ public class PlayerController {
             playerDAO.update(new Player(playerId, player.role(), player.pseudo(), player.id_game(), ""));
             context.getResponse().ok("Player updated successfully");
 
-            GameDAO gameDAO = new GameDAO();
-            HieraGame game = gameDAO.findHierarchicalGameByCode(player.game_code());
-            context.getSSE().emit(game.code(), game);
+            ApplicationController.diffuseGame(player.game_code(), context);
         } catch (Exception e) {
             e.printStackTrace();
             context.getResponse().serverError("Error updating player");

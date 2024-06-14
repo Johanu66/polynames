@@ -24,7 +24,21 @@ export class PlayerView {
         }
     }
 
-    static attachJoinGameEvents() {
+    static async attachJoinGameEvents() {
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+        var game = null;
+        if (code){
+            const game = await GameService.findByCode(code);
+            if(game){
+                this.game_exist = true;
+                document.getElementById("code").value = code;
+                document.getElementById("code_container").classList.toggle("hidden");
+                document.getElementById("pseudo_container").classList.toggle("hidden");
+            }else{
+                alert("Game not found");
+            }
+        }
         document.getElementById("join-game-form").addEventListener("submit", async (event)=>{
             event.preventDefault();
             if(this.game_exist){
