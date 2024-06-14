@@ -8,6 +8,7 @@ import models.HieraCard;
 import models.HieraGame;
 import models.HieraPlayer;
 import models.HieraTurn;
+import models.Turn;
 
 public class GameDAO {
     private PolynameDatabase database;
@@ -194,6 +195,10 @@ public class GameDAO {
 
         // Insert the game into the database
         game = this.insert(game);
+
+        // Create a turn for the game
+        TurnDAO turnDAO = new TurnDAO();
+        turnDAO.insert(new Turn(0, "", 0, "pending", 0, 0, game.id()));
 
         // Fetch 25 random unique words
         List<Integer> wordIds = getRandomIds(connection, "word", 25);

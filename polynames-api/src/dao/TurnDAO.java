@@ -77,14 +77,13 @@ public class TurnDAO {
     }
 
     public void update(Turn turn) throws SQLException {
-        PreparedStatement myPreparedStatement = this.database.prepareStatement("UPDATE turn SET hint = ?, score = ?, status = ?, hint_count = ?, discovered_cards = ?, id_game = ? WHERE id = ?;");
+        PreparedStatement myPreparedStatement = this.database.prepareStatement("UPDATE turn SET hint = ?, score = ?, status = ?, hint_count = ?, discovered_cards = ? WHERE id = ?;");
         myPreparedStatement.setString(1, turn.hint());
         myPreparedStatement.setInt(2, turn.score());
         myPreparedStatement.setString(3, turn.status());
         myPreparedStatement.setInt(4, turn.hint_count());
         myPreparedStatement.setInt(5, turn.discovered_cards());
-        myPreparedStatement.setInt(6, turn.id_game());
-        myPreparedStatement.setInt(7, turn.id());
+        myPreparedStatement.setInt(6, turn.id());
 
         myPreparedStatement.executeUpdate();
     }
