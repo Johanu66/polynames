@@ -2,7 +2,7 @@ package dao;
 
 import java.sql.*;
 import java.util.*;
-import database.PolyBayDatabase;
+import database.PolynameDatabase;
 import models.Game;
 import models.HieraCard;
 import models.HieraGame;
@@ -10,12 +10,12 @@ import models.HieraPlayer;
 import models.HieraTurn;
 
 public class GameDAO {
-    private PolyBayDatabase database;
+    private PolynameDatabase database;
 
     public GameDAO() {
         try {
-            this.database = new PolyBayDatabase();
-        } catch (SQLException e) {
+            this.database = PolynameDatabase.getInstance();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

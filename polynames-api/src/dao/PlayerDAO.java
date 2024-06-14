@@ -5,17 +5,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import database.PolyBayDatabase;
+import database.PolynameDatabase;
 import models.HieraPlayer;
 import models.Player;
 
 public class PlayerDAO {
-    private PolyBayDatabase database;
+    private PolynameDatabase database;
 
     public PlayerDAO() {
         try {
-            this.database = new PolyBayDatabase();
-        } catch (SQLException e) {
+            this.database = PolynameDatabase.getInstance();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -107,11 +107,10 @@ public class PlayerDAO {
     }
 
     public void update(Player player) throws SQLException {
-        PreparedStatement myPreparedStatement = this.database.prepareStatement("UPDATE player SET role = ?, pseudo = ?, id_game = ? WHERE id = ?;");
+        PreparedStatement myPreparedStatement = this.database.prepareStatement("UPDATE player SET role = ?, pseudo = ? WHERE id = ?;");
         myPreparedStatement.setString(1, player.role());
         myPreparedStatement.setString(2, player.pseudo());
-        myPreparedStatement.setInt(3, player.id_game());
-        myPreparedStatement.setInt(4, player.id());
+        myPreparedStatement.setInt(3, player.id());
 
         myPreparedStatement.executeUpdate();
     }

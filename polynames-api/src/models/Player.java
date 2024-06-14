@@ -3,7 +3,7 @@ package models;
 public record Player(int id, String role, String pseudo, int id_game, String game_code) {
     @Override
     public final String toString() {
-        return String.format("{id=%d, role='%s', pseudo='%s', id_game=%d, id_game=%s}", id, role, pseudo, id_game, game_code);
+        return String.format("{id=%d, role='%s', pseudo='%s', id_game=%d, game_code=%s}", id, role, pseudo, id_game, game_code);
     }
 
     public Player withIdGame(int newIdGame) {

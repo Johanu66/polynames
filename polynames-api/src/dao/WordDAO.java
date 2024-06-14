@@ -4,16 +4,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import database.PolyBayDatabase;
+import database.PolynameDatabase;
 import models.Word;
 
 public class WordDAO {
-    private PolyBayDatabase database;
+    private PolynameDatabase database;
 
     public WordDAO() {
         try {
-            this.database = new PolyBayDatabase();
-        } catch (SQLException e) {
+            this.database = PolynameDatabase.getInstance();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

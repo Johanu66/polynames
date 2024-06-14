@@ -4,17 +4,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import database.PolyBayDatabase;
+import database.PolynameDatabase;
 import models.Card;
 import models.HieraCard;
 
 public class CardDAO {
-    private PolyBayDatabase database;
+    private PolynameDatabase database;
 
     public CardDAO() {
         try {
-            this.database = new PolyBayDatabase();
-        } catch (SQLException e) {
+            this.database = PolynameDatabase.getInstance();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
