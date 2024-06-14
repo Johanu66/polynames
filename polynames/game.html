@@ -13,21 +13,54 @@
             <div class="spinner"></div>
         </div>
         <div id="game_container" class="hidden">
-            <div di="spymaster_container" class="flex flex-col items-center bg-red-500 text-white rounded-lg p-4 w-1/4">
-                <div class="text-3xl font-bold">9</div>
-                <div class="text-xl">Spymester : </div>
-                <div id="spymaster_pseudo" class="text-xl">----</div>
-                <button id="join_as_spymaster_button" class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Join as Spymaster</button>
+            <div class="first_container">
+                <div class="score-container">
+                    Score : <span id="score"></span>
+                </div>
+
+                <div id="message" class="hidden"></div>
+
+                <div class="players-container position-relative">
+                    <div id="playerCountContainer" class="text-white font-normal flex items-center rounded-lg create-button m-1 lg:px-8">
+                        <span id="playerCount">5 joueurs</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-down-fill m-2" viewBox="0 0 16 16">
+                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                        </svg>
+                    </div>
+                    <div id="link-container" class="link-container">
+                        <div class="flex items-center">
+                            <input class="p-2 m-2 rounded-lg" type="text" id="game_link" value="" readonly>
+                            <button id="game_link_copy_button" class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Copier le lien</button>
+                        </div>
+                        <div class="flex items-center">
+                            <input class="p-2 m-2 rounded-lg" type="text" id="game_code" value="" readonly>
+                            <button id="game_code_copy_button" class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Copier le code</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div>
-                <main id="cards" class="grid grid-cols-5 gap-4 w-2/4">
-                </main>
+            <div id="game_main_container">
+                <div di="spymaster_container" class="flex flex-col items-center bg-red-500 text-white rounded-lg p-4 w-1/4">
+                    <div class="text-3xl font-bold"></div>
+                    <div class="text-xl">Spymester : </div>
+                    <div id="spymaster_pseudo" class="text-xl">----</div>
+                    <button id="join_as_spymaster_button" class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Join as Spymaster</button>
+                </div>
+                <div>
+                    <main id="cards" class="grid grid-cols-5 gap-4 w-2/4">
+                    </main>
+                </div>
+                <div id="operative_container" class="flex flex-col items-center bg-blue-700 text-white rounded-lg p-4 w-1/4">
+                    <div class="text-3xl font-bold"></div>
+                    <div class="text-xl">Operative : </div>
+                    <div id="operative_pseudo" class="text-xl">----</div>
+                    <button id="join_as_operative_button" class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Join as Operative</button>
+                </div>
             </div>
-            <div id="operative_container" class="flex flex-col items-center bg-blue-700 text-white rounded-lg p-4 w-1/4">
-                <div class="text-3xl font-bold">9</div>
-                <div class="text-xl">Operative : </div>
-                <div id="operative_pseudo" class="text-xl">----</div>
-                <button id="join_as_operative_button" class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Join as Operative</button>
+            <div class="flex items-center justify-center mt-6">
+                <input class="p-2 m-2 rounded-lg" type="text" id="gameCode" value="">
+                <select class="p-2 m-2 rounded-lg" type="text" id="gameCode" value=""></select>
+                <button class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Soumettre</button>
             </div>
         </div>
     </div>

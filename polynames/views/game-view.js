@@ -9,6 +9,11 @@ window.addEventListener("load", async () => {
     } else {
         alert('Game not found');
     }
+
+    document.getElementById("playerCountContainer").addEventListener("click", function() {
+        var linkContainer = document.getElementById("link-container");
+        linkContainer.classList.toggle("show");
+    });
 });
 
 async function getGame() {
@@ -122,6 +127,16 @@ function reflesh(game) {
             await PlayerService.updatePlayer(player);
         });
 
+        document.getElementById("score").innerHTML = game.score;
+        document.getElementById("playerCount").innerHTML = game.players.length + " joueurs";
+
+        document.getElementById("game_link").value = window.location.protocol + "//" + window.location.host + "/join.html?code=" + game.code;
+        document.getElementById("game_link_copy_button").addEventListener("click", copyLink);
+
+        
+        document.getElementById("game_code").value = game.code;
+        document.getElementById("game_code_copy_button").addEventListener("click", copyCode);
+
         const mySSEClient = new SSEClient("localhost:8080");
         mySSEClient.connect();
         mySSEClient.subscribe(game.code, reflesh);
@@ -135,4 +150,27 @@ function reflesh(game) {
     
 }
 
+function copyLink() {
+    var copyText = document.getElementById("game_link");
+    copyText.select();
+    document.execCommand("copy");
+    showMessage("Lien copié: " + copyText.value);
+    var linkContainer = document.getElementById("link-container");
+    linkContainer.classList.toggle("show");
+}
+function copyCode() {
+    var copyText = document.getElementById("game_code");
+    copyText.select();
+    document.execCommand("copy");
+    showMessage("Code copié: " + copyText.value);
+    var linkContainer = document.getElementById("link-container");
+    linkContainer.classList.toggle("show");
+}
 
+function showMessage(message) {
+    document.getElementById("message").textContent = message;
+    document.getElementById("message").classList.remove("hidden");
+    setTimeout(() => {
+        document.getElementById("message").classList.add("hidden");
+    }, 3000);
+}
