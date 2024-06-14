@@ -73,13 +73,10 @@ public class CardDAO {
     }
 
     public void update(Card card) throws SQLException {
-        PreparedStatement myPreparedStatement = this.database.prepareStatement("UPDATE card SET position = ?, status = ?, id_game = ?, id_color = ?, id_word = ? WHERE id = ?;");
+        PreparedStatement myPreparedStatement = this.database.prepareStatement("UPDATE card SET position = ?, status = ? WHERE id = ?;");
         myPreparedStatement.setInt(1, card.position());
         myPreparedStatement.setString(2, card.status());
-        myPreparedStatement.setInt(3, card.id_game());
-        myPreparedStatement.setInt(4, card.id_color());
-        myPreparedStatement.setInt(5, card.id_word());
-        myPreparedStatement.setInt(6, card.id());
+        myPreparedStatement.setInt(3, card.id());
 
         myPreparedStatement.executeUpdate();
     }
@@ -92,7 +89,7 @@ public class CardDAO {
     }
 
     public HieraCard findHieraCardById(int cardId) throws SQLException {
-        PreparedStatement myPreparedStatement = this.database.prepareStatement("SELECT card.id, card.position, card.status, color.name, word.name FROM card INNER JOIN color ON card.id_color = color.id INNER JOIN word ON card.id_word = word.id WHERE card.id = ?;");
+        PreparedStatement myPreparedStatement = this.database.prepareStatement("SELECT card.id, card.position, card.status, color.name, word.text FROM card INNER JOIN color ON card.id_color = color.id INNER JOIN word ON card.id_word = word.id WHERE card.id = ?;");
         myPreparedStatement.setInt(1, cardId);
         ResultSet results = myPreparedStatement.executeQuery();
 
@@ -101,7 +98,7 @@ public class CardDAO {
             final int position = results.getInt("position");
             final String status = results.getString("status");
             final String color = results.getString("color.name");
-            final String word = results.getString("word.name");
+            final String word = results.getString("word.text");
 
             return new HieraCard(id, position, status, color, word);
         }

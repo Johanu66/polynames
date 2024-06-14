@@ -54,6 +54,11 @@ public class App {
             (WebServerContext context) -> { GameController.create(context); }
         );
 
+        webServer.getRouter().post(
+            "/games/:gameCode/check-card",
+            (WebServerContext context) -> { GameController.checkCard(context); }
+        );
+
         webServer.getRouter().put(
             "/games/:gameId",
             (WebServerContext context) -> { GameController.update(context); }

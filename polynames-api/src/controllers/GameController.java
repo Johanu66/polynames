@@ -1,8 +1,13 @@
 package controllers;
 
+import dao.CardDAO;
 import dao.GameDAO;
+import dao.TurnDAO;
+import models.Card;
 import models.Game;
+import models.HieraCard;
 import models.HieraGame;
+import models.Turn;
 import webserver.WebServerContext;
 
 public class GameController {
@@ -84,6 +89,51 @@ public class GameController {
             context.getResponse().ok("Game deleted successfully");
         } catch (Exception e) {
             context.getResponse().serverError("Error deleting game");
+        }
+    }
+
+    static public void checkCard(WebServerContext context) {
+        String gameCode = context.getRequest().getParam("gameCode");
+        try {
+            Card card = context.getRequest().extractBody(Card.class);
+
+            CardDAO cardDAO = new CardDAO();
+            TurnDAO turnDAO = new TurnDAO();
+
+            HieraCard hieraCard = cardDAO.findHieraCardById(card.id());
+            HieraGame hieraGame = gameDAO.findHierarchicalGameByCode(gameCode);
+
+            cardDAO.update(new Card(card.id(), card.position(), "visible", card.id_game(), card.id_color(), card.id_word()));
+
+            if (hieraGame != null) {
+                //A chaque tour, on comptabilise les points obtenus pour chaque carte bleue découverte. La première carte vaut 1 point, la seconde 2 points, la troisième 3 points, ... Si le Maître des intuitions découvre une carte bleue en N+1, cette carte vaut N² points
+                int score = 0;
+                if (hieraCard.color().equals("black")) {
+                    gameDAO.update(new Game(hieraGame.id(), hieraGame.score(), hieraGame.code(), "done", hieraGame.current_player()));
+                } else if (hieraCard.color().equals("gray")) {
+                    turnDAO.update(new Turn(hieraGame.turn().id(), hieraGame.turn().hint(), hieraGame.turn().score(), "done", hieraGame.turn().hint_count(), hieraGame.turn().discovered_cards(), hieraGame.id()));
+                    turnDAO.insert(new Turn(0, "", 0, "pending", 0, 0, hieraGame.id()));
+                    gameDAO.update(new Game(hieraGame.id(), hieraGame.score(), hieraGame.code(), hieraGame.status(), "spymaster"));
+                }else if (hieraCard.color().equals("blue")) {
+                    if((hieraGame.turn().discovered_cards()+1) <= hieraGame.turn().hint_count()){
+                        score = hieraGame.turn().discovered_cards() + 1;
+                        turnDAO.update(new Turn(hieraGame.turn().id(), hieraGame.turn().hint(), hieraGame.turn().score() + score, hieraGame.turn().status(), hieraGame.turn().hint_count(), hieraGame.turn().discovered_cards() + 1, hieraGame.id()));
+                        gameDAO.update(new Game(hieraGame.id(), hieraGame.score() + score, hieraGame.code(), hieraGame.status(), "operative"));
+                    }else{
+                        score = (int) Math.pow(hieraGame.turn().hint_count(), 2);
+                        turnDAO.update(new Turn(hieraGame.turn().id(), hieraGame.turn().hint(), hieraGame.turn().score() + score, hieraGame.turn().status(), hieraGame.turn().hint_count(), hieraGame.turn().discovered_cards() + 1, hieraGame.id()));
+                        gameDAO.update(new Game(hieraGame.id(), hieraGame.score() + score, hieraGame.code(), hieraGame.status(), "spymaster"));
+                        turnDAO.insert(new Turn(0, "", 0, "pending", 0, 0, hieraGame.id()));
+                    }
+                }
+
+                ApplicationController.diffuseGame(hieraGame.code(), context);
+            } else {
+                context.getResponse().notFound("Game not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            context.getResponse().serverError("Error checking card");
         }
     }
 }
