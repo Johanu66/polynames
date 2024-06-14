@@ -1,6 +1,7 @@
 import { SSEClient } from "../lib//sse-client.js";
 import { GameService } from "../services/game-service.js";
 import { PlayerService } from "../services/player-service.js";
+import { TurnService } from "../services/turn-service.js";
 
 window.addEventListener("load", async () => {
     const game = await getGame();
@@ -66,9 +67,12 @@ function reflesh(game) {
         if(game.status == 'pending' || game.status == 'done'){
             cardsContainer.classList.add("grid", "grid-cols-5", "gap-4", "w-2/4");
             cardsContainer.classList.remove("flex", "justify-center");
+
+            //Trier les cards par ordre de position
+            game.cards.sort((a, b) => a.position - b.position);
             game.cards.forEach(card => {
                 const cardElement = document.createElement('div');
-                cardElement.className = 'bg-gray-200 rounded-lg p-4 text-center';
+                cardElement.className = 'bg-gray-200 rounded-lg p-4 text-center cursor-pointer card';
                 cardElement.textContent = card.word.toUpperCase();
 
                 // Add card color based on its status and color
@@ -85,8 +89,21 @@ function reflesh(game) {
                     }
                 }
 
+                // For version 2
+                // if(card.status === 'hidden' && player.role === 'spymaster'){
+                //     cardElement.addEventListener('click', async (event) => {
+                //         event.preventDefault();
+                //         event.target.classList.toggle('selected');
+                //         selectedCard(card);
+                //     });
+                // }
+
                 cardsContainer.appendChild(cardElement);
             });
+
+            if(game.status == 'pending'){
+                displayTurn(game);
+            }
         }
         else if(game.status == 'waiting'){
             const startButton = document.createElement('button');
@@ -174,3 +191,54 @@ function showMessage(message) {
         document.getElementById("message").classList.add("hidden");
     }, 3000);
 }
+
+function displayTurn(game){
+    let player = JSON.parse(localStorage.getItem('player'));
+    if(game.current_player == "spymaster"){
+        console.log(game.current_player)
+        if(player.role == "spymaster"){
+            document.getElementById("hint_container").classList.remove("hidden");
+            document.getElementById("message").textContent = "";
+            document.getElementById("message").classList.add("hidden");
+        }else{
+            document.getElementById("hint_container").classList.add("hidden");
+            document.getElementById("message").textContent = "Le spymaster est entrain de jouer.";
+            document.getElementById("message").classList.remove("hidden");
+        }
+    }else{
+        document.getElementById("hint_container").classList.add("hidden");
+        if(player.role == "spymaster"){
+            document.getElementById("message").textContent = "L'operative est entrain de jouer";
+        }else{
+            document.getElementById("message").textContent = "Indice : " + game.turn.hint + " avec " + game.turn.hint_count + " mots associés.";
+        }
+        document.getElementById("message").classList.remove("hidden");
+    }
+    document.getElementById("turn_send_button").addEventListener("click", async (event)=>{
+        event.preventDefault();
+        const hint = document.getElementById("hint").value;
+        const hint_count = document.getElementById("hint_count").value;
+        if(hint && hint_count){
+            if(await TurnService.update({id: game.turn.id, hint: hint, hint_count: hint_count, score: game.turn.score, id_game: game.id, status: game.turn.status})){
+                await GameService.updateGame({id: game.id, score: game.score, code: game.code, status: game.status, current_player: "operative"});
+            }
+        }
+    });
+}
+
+// For version 2
+// function selectedCard(card){
+//     window.selectedCards = window.selectedCards || [];
+//     window.selectedCards.toggle(card);
+//     document.getElementById("hint_count").value = window.selectedCards.length;
+// }
+
+
+Array.prototype.toggle = function(item) {
+    const index = this.indexOf(item);
+    if (index === -1) {
+        this.push(item);
+    } else {
+        this.splice(index, 1);
+    }
+};

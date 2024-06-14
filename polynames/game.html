@@ -57,10 +57,20 @@
                     <button id="join_as_operative_button" class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Join as Operative</button>
                 </div>
             </div>
-            <div class="flex items-center justify-center mt-6">
-                <input class="p-2 m-2 rounded-lg" type="text" id="gameCode" value="">
-                <select class="p-2 m-2 rounded-lg" type="text" id="gameCode" value=""></select>
-                <button class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8">Soumettre</button>
+            <div id="hint_container" class="flex items-center justify-center mt-6 hidden">
+                <input class="p-2 m-2 rounded-lg" type="text" id="hint" value="" placeholder="Indice"  pattern="^\S+$" required>
+                <select class="p-2 m-2 rounded-lg w-20" type="text" id="hint_count" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                </select>
+                <button id="turn_send_button" class="create-button text-sm group-hover:bg-tutorial group-hover:bg-none m-1 lg:px-8 rounded-lg">Valider</button>
             </div>
         </div>
     </div>
