@@ -72,11 +72,11 @@ function reflesh(game) {
             game.cards.sort((a, b) => a.position - b.position);
             game.cards.forEach(card => {
                 const cardElement = document.createElement('div');
-                cardElement.className = 'bg-gray-200 rounded-lg p-4 text-center cursor-pointer card';
+                cardElement.className = 'bg-gray-200 rounded-lg p-4 text-center card';
                 cardElement.textContent = card.word.toUpperCase();
 
                 // Add card color based on its status and color
-                if (card.status === 'revealed' || (card.status === 'hidden' && player.role === 'spymaster')) {
+                if (card.status === 'visible' || (card.status === 'hidden' && player.role === 'spymaster')) {
                     if (card.color === 'blue') {
                         cardElement.classList.add('bg-blue-500');
                     } else if (card.color === 'red') {
@@ -89,20 +89,22 @@ function reflesh(game) {
                     }
                 }
 
-                // For version 2
-                // if(card.status === 'hidden' && player.role === 'spymaster'){
-                //     cardElement.addEventListener('click', async (event) => {
-                //         event.preventDefault();
-                //         event.target.classList.toggle('selected');
-                //         selectedCard(card);
-                //     });
-                // }
+                if(card.status === 'hidden' && player.role === 'operative' && game.current_player === 'operative' && game.status === 'pending'){
+                    cardElement.classList.add('cursor-pointer');
+                    cardElement.addEventListener('click', async (event) => {
+                        event.preventDefault();
+                        GameService.checkCard(card, game.code);
+                    });
+                }
 
                 cardsContainer.appendChild(cardElement);
             });
 
             if(game.status == 'pending'){
                 displayTurn(game);
+            }else{
+                document.getElementById("message").textContent = "La partie est terminée";
+                document.getElementById("message").classList.remove("hidden");
             }
         }
         else if(game.status == 'waiting'){
@@ -211,6 +213,7 @@ function displayTurn(game){
             document.getElementById("message").textContent = "L'operative est entrain de jouer";
         }else{
             document.getElementById("message").textContent = "Indice : " + game.turn.hint + " avec " + game.turn.hint_count + " mots associés.";
+
         }
         document.getElementById("message").classList.remove("hidden");
     }

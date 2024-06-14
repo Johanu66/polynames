@@ -30,4 +30,14 @@ export class GameService {
             body: JSON.stringify(game)
         });
     }
+
+    static async checkCard(card, game_code) {
+        const response = await fetch('http://localhost:8080/games/'+game_code+'/check-card', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(card)
+        });
+    }
   }
